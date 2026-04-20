@@ -55,6 +55,12 @@ class ArenaCameraNode : public rclcpp::Node
   std::string serial_;
   bool is_passed_serial_;
 
+  std::string ip_;
+  bool is_passed_ip_;
+
+  std::string host_iface_ip_;
+  bool is_passed_host_iface_ip_;
+
   std::string topic_;
 
   size_t width_;
@@ -69,11 +75,22 @@ class ArenaCameraNode : public rclcpp::Node
   double exposure_time_;
   bool is_passed_exposure_time_;
 
+  bool auto_exposure_;
+  double auto_exposure_min_us_;
+  double auto_exposure_max_us_;
+  double auto_exposure_target_;
+
+  double frame_rate_hz_;
+  bool is_passed_frame_rate_hz_;
+
   std::string pixelformat_pfnc_;
   std::string pixelformat_ros_;
   bool is_passed_pixelformat_ros_;
 
   bool trigger_mode_activated_;
+  std::string trigger_source_;
+  std::string trigger_selector_;
+  std::string trigger_activation_;
 
   std::string pub_qos_history_;
   bool is_passed_pub_qos_history_;
@@ -84,10 +101,17 @@ class ArenaCameraNode : public rclcpp::Node
   std::string pub_qos_reliability_;
   bool is_passed_pub_qos_reliability_;
 
+  int discovery_timeout_ms_;
+
+  uint64_t min_publish_period_ns_ = 0;
+  uint64_t last_publish_timestamp_ns_ = 0;
+
   void parse_parameters_();
   void initialize_();
 
   void wait_for_device_timer_callback_();
+  uint32_t ipv4_to_u32_(const std::string& ip_str);
+  void update_devices_for_selection_();
 
   void run_();
   // TODO :
@@ -99,6 +123,7 @@ class ArenaCameraNode : public rclcpp::Node
   void set_nodes_gain_();
   void set_nodes_pixelformat_();
   void set_nodes_exposure_();
+  void set_nodes_frame_rate_();
   void set_nodes_trigger_mode_();
   void set_nodes_test_pattern_image_();
   void publish_images_();

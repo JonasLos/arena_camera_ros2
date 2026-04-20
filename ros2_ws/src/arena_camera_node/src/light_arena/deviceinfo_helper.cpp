@@ -22,6 +22,25 @@ size_t DeviceInfoHelper::get_index_of_serial(
   auto index = std::distance(device_infos.begin(), itr);
   return index;
 }
+
+size_t DeviceInfoHelper::get_index_of_ip(
+    std::vector<Arena::DeviceInfo> device_infos, std::string ip)
+{
+  auto itr = std::find_if(
+      device_infos.begin(),
+      device_infos.end(), [=](Arena::DeviceInfo & itr_) -> auto {
+        auto curr_ip = std::string(itr_.IpAddressStr().c_str());
+        return ip == curr_ip;
+      });
+
+  if (itr == device_infos.end()) {
+    throw std::invalid_argument(std::string("No device with ip ") + ip);
+  }
+
+  auto index = std::distance(device_infos.begin(), itr);
+  return index;
+}
+
 std::string DeviceInfoHelper::info(Arena::DeviceInfo device_info)
 {
   auto msg = std::string(device_info.MacAddressStr().c_str()) + " | " +
